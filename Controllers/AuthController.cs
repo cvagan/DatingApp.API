@@ -17,12 +17,16 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
+
+        // constructor takes in configuration data and the authentication repository
         public AuthController(IAuthRepository repo, IConfiguration configuration)
         {
             _repo = repo;
             _config = configuration;
         }
 
+        // api/auth/register post route
+        // returns 201 created or BadRequest if username and password requirements are not met
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]UserForRegisterDto userDto)
         {
@@ -49,10 +53,11 @@ namespace DatingApp.API.Controllers
             return StatusCode(201);
         }
 
+        // api/auth/login post route
+        // takes json object from request body and returns Ok with tokenstring or Unauthorized
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserForLoginDto userDto)
         {
-            //throw new Exception("Something went wrong");
             var userFromRepo = await _repo.Login(userDto.Username.ToLower(), userDto.Password);
 
             if (userFromRepo == null) {

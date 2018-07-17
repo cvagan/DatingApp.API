@@ -12,6 +12,8 @@ namespace DatingApp.API.Data
         {
             _db = db;
         }
+
+        // returns user object if provided username and password is verified
         public async Task<User> Login(string username, string password)
         {
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Username == username);
@@ -29,6 +31,7 @@ namespace DatingApp.API.Data
             return user;
         }
 
+        // helper method for verifying password hash
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -42,6 +45,7 @@ namespace DatingApp.API.Data
             return true;
         }
 
+        // hashes password, stores user in database and returns user
         public async Task<User> Register(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
@@ -56,6 +60,7 @@ namespace DatingApp.API.Data
             return user;
         }
 
+        // helper method for creating password hash
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -65,6 +70,7 @@ namespace DatingApp.API.Data
             }
         }
 
+        // method to check if user exists in database based on provided username
         public async Task<bool> UserExists(string username)
         {
             var foundUser = await _db.Users.FirstOrDefaultAsync(user => user.Username == username);
