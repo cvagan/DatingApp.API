@@ -3,4 +3,4 @@ bin
 obj
 .vscode
 .vs
-*appsettings.json
+.\appsettings.json
